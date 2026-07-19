@@ -1,0 +1,23 @@
+# CI compile test -- ESP32 (Arduino framework). Local component.
+esphome:
+  name: ci-web-i2c-esp32-arduino
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+wifi:
+  ssid: "ci-test"
+  password: "ci-test-password"
+logger:
+external_components:
+  - source:
+      type: local
+      path: ../components
+    components: [web_i2c]
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+web_i2c:
+  id: i2c_debug
+  port: 8095

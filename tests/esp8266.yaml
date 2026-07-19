@@ -1,0 +1,21 @@
+# CI compile test -- ESP8266. Uses the local component (not GitHub).
+esphome:
+  name: ci-web-i2c-esp8266
+esp8266:
+  board: d1_mini
+wifi:
+  ssid: "ci-test"
+  password: "ci-test-password"
+logger:
+external_components:
+  - source:
+      type: local
+      path: ../components
+    components: [web_i2c]
+i2c:
+  sda: D2
+  scl: D1
+  scan: true
+web_i2c:
+  id: i2c_debug
+  port: 8095
