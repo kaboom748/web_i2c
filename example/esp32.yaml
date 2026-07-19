@@ -1,20 +1,14 @@
-# web_i2c on an ESP32.
-# Open http://<esp-ip>:8091/ in a browser after flashing.
-
 esphome:
-  name: web-i2c-32
+  name: web-i2c-esp32
 
 esp32:
   board: esp32dev
   framework:
-    type: esp-idf
+    type: arduino
 
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  ap:
-    ssid: "web-i2c-fallback"
-    password: "esphome123"
 
 logger:
 api:
@@ -25,29 +19,15 @@ external_components:
   - source: github://kaboom748/web_i2c
     components: [web_i2c]
 
-# The REAL hardware I2C bus. Explicit id required (two buses once web_i2c exists).
+# the real I2C bus of the ESP (wire your SSD1306 here)
 i2c:
-  id: bus_a
-  sda: 21
-  scl: 22
+  id: bus0
+  sda: GPIO21
+  scl: GPIO22
   scan: true
-  frequency: 400kHz
 
-# The web terminal AND transparent I2C tap.
+# the in-browser I2C console
 web_i2c:
   id: i2c_debug
-  i2c_id: bus_a
-  port: 8091
-
-# Route the display through the tap to observe it. On the ESP32's second core
-# the web server never starves, so full-data monitoring is very comfortable --
-# you can raise WI_TAP_DATA_MAX / WI_TAP_AGG_SLOTS in web_i2c.h if you want more.
-display:
-  - platform: ssd1306_i2c
-    model: "SSD1306 128x64"
-    address: 0x3C
-    i2c_id: i2c_debug
-    id: oled_display
-    update_interval: 1000ms
-    lambda: |-
-      // draw here
+  i2c_id: bus0   # web_i2c is itself an I2C bus, so name the real one here
+  port: 8095     # open http://<esp-ip>:8095/ in a browser

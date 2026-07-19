@@ -30,7 +30,9 @@ CONFIG_SCHEMA = cv.All(
         {
             cv.GenerateID(): cv.declare_id(WebI2C),
             # the I2C bus to drive (defined by an i2c: block in the YAML)
-            cv.GenerateID(i2c.CONF_I2C_ID): cv.use_id(i2c.I2CBus),
+            # web_i2c IS an i2c::I2CBus, so a config always has >=2 buses
+            # (the real one + us). Auto-resolution is ambiguous -- require it.
+            cv.Required(i2c.CONF_I2C_ID): cv.use_id(i2c.I2CBus),
             # TCP port of the embedded WebSocket server
             cv.Required(CONF_PORT): cv.port,
         }

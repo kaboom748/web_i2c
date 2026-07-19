@@ -1,5 +1,3 @@
-<img width="1903" height="917" alt="final" src="https://github.com/user-attachments/assets/5d1125bc-479a-4db3-9130-42addf9823a2" />
-
 # web_i2c
 
 **An in-browser I2C bus console, monitor, and controller for ESPHome.**
@@ -71,6 +69,7 @@ Then define an I2C bus and the terminal:
 ```yaml
 # the real I2C bus of the ESP (wire your SSD1306 / sensor here)
 i2c:
+  id: bus0
   sda: D2        # GPIO4 on a D1 mini
   scl: D1        # GPIO5 on a D1 mini
   scan: true     # log addresses found at boot
@@ -78,6 +77,7 @@ i2c:
 # the in-browser I2C console
 web_i2c:
   id: i2c_debug
+  i2c_id: bus0   # name the real bus (see note below)
   port: 8095     # open http://<esp-ip>:8095/ in a browser
 ```
 
@@ -88,12 +88,14 @@ ESP8266 and ESP32.
 
 | Option     | Required | Description                                              |
 |------------|----------|----------------------------------------------------------|
-| `id`       | no       | Component ID (also usable as an `i2c_id`, see below).    |
-| `i2c_id`   | no*      | The `i2c:` bus to drive. Auto-selected if only one bus.  |
+| `id`       | no       | Component ID (also usable as an `i2c_id` by other comps).|
+| `i2c_id`   | **yes**  | The real `i2c:` bus to wrap (give that bus an `id`).     |
 | `port`     | **yes**  | TCP port of the embedded WebSocket server.               |
 
-\* If your config has more than one `i2c:` bus, give each bus an `id` and set
-`i2c_id` explicitly.
+**Why `i2c_id` is required:** `web_i2c` is itself an `i2c::I2CBus` (a decorator),
+so any config has at least two buses -- the real one and `web_i2c`. ESPHome
+cannot auto-pick which one `web_i2c` should wrap, so you must name the real bus
+explicitly (`i2c: { id: bus0, ... }` then `web_i2c: { i2c_id: bus0, ... }`).
 
 ### Monitoring other components' traffic
 

@@ -13,9 +13,11 @@ external_components:
       path: ../components
     components: [web_i2c]
 i2c:
+  id: bus0
   sda: D2
   scl: D1
   scan: true
 web_i2c:
   id: i2c_debug
+  i2c_id: bus0     # web_i2c is itself a bus, so this is required
   port: 8095
