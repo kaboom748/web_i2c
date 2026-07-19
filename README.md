@@ -1,3 +1,5 @@
+<img width="1903" height="917" alt="final" src="https://github.com/user-attachments/assets/16643728-5ef4-4b92-8831-60a0b42573cb" />
+
 # web_i2c
 
 **An in-browser I2C bus console, monitor, and controller for ESPHome.**
