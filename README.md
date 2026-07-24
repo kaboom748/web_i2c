@@ -326,3 +326,25 @@ and the pitfalls solved along the way.
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+#######################################################################################################################
+## Operating notes
+
+- **Take-over blocks tapped *reads* too.** In take-over mode every tapped
+  component gets a fake `OK` — fine for a display, but a tapped **sensor**
+  will publish garbage values. Only point display-type components at the tap
+  if you plan to use take-over.
+
+- **Screen mirror after a page reload:** the mirror stays blank until the
+  next pixel actually changes on the panel. Force a redraw on the device
+  (or toggle Mirror off/on) to repaint it.
+
+- **The Summary button resets the address filter to "all".** Re-enter your
+  filter after switching detail level.
+
+- **Stuck bus? RECOVER first, SCAN second.** Scanning a bus with SDA/SCL
+  held low makes the ESP chew through ~112 timeouts and can starve WiFi;
+  the status pill shows "line held!" — that's your cue.
+
+- **One command at a time during a register dump** — a manual R/RR sent
+  mid-dump corrupts the grid.
